@@ -18,7 +18,7 @@ export class AppController {
   async locationForDateAndTime(@Query('dateTime') dateTime: string) {
     const traffic = await this.trafficService.getTraffic(dateTime);
     return {
-      hello: traffic,
+      hello: traffic.items,
     };
   }
 }
