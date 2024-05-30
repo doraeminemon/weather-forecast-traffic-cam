@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { TrafficService } from './traffic.service';
 import { LocationsModule } from './locations/locations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WeatherService } from './weather.service';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         ? {
             type: 'postgres',
             url: process.env.DATABASE_URL,
+            entities: [__dirname + '/../**/*.entity.js'],
           }
         : {
             type: 'postgres',
@@ -29,6 +31,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     LocationsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TrafficService],
+  providers: [AppService, TrafficService, WeatherService],
 })
 export class AppModule {}

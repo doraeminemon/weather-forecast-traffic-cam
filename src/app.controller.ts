@@ -1,12 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { TrafficService } from './traffic.service';
+import { WeatherService } from './weather.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly trafficService: TrafficService,
+    private readonly weatherService: WeatherService,
   ) {}
 
   @Get()
@@ -15,7 +17,7 @@ export class AppController {
   }
 
   @Get('/traffic')
-  async locationForDateAndTime(
+  async getTrafficInfo(
     @Query('dateTime') dateTime: string,
     @Query('lat') lat: string,
     @Query('lng') lng: string,
@@ -37,5 +39,13 @@ export class AppController {
     return {
       result,
     };
+  }
+
+  @Get('/weather')
+  async getWeatherInfo(
+    @Query('dateTime') dateTime: string,
+    @Query('date') date: string,
+  ) {
+    return this.weatherService.getWeather(dateTime, date);
   }
 }
