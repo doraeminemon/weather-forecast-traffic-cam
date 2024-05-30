@@ -15,10 +15,27 @@ export class AppController {
   }
 
   @Get('/traffic')
-  async locationForDateAndTime(@Query('dateTime') dateTime: string) {
-    const traffic = await this.trafficService.getTraffic(dateTime);
+  async locationForDateAndTime(
+    @Query('dateTime') dateTime: string,
+    @Query('lat') lat: string,
+    @Query('lng') lng: string,
+  ) {
+    let result = await this.trafficService.getTraffic(dateTime);
+    if (lat && lng) {
+      result = {
+        ...result,
+        items: result.items.map((item) => ({
+          ...item,
+          cameras: item.cameras.filter(
+            (item) =>
+              item.location.latitude.toFixed(8) === lat &&
+              item.location.longitude.toFixed(6) === lng,
+          ),
+        })),
+      };
+    }
     return {
-      hello: traffic.items,
+      result,
     };
   }
 }
