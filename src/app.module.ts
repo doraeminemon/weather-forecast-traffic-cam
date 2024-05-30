@@ -5,12 +5,10 @@ import { HttpModule } from '@nestjs/axios';
 import { TrafficService } from './traffic.service';
 import { LocationsModule } from './locations/locations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Location } from './locations/entities/location.entity';
 
 @Module({
   imports: [
     HttpModule,
-    LocationsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -18,9 +16,10 @@ import { Location } from './locations/entities/location.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'weather-forecast-traffic-cam',
-      entities: [Location],
+      entities: [__dirname + '/../**/*.entity.js'],
       synchronize: true,
     }),
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TrafficService],
