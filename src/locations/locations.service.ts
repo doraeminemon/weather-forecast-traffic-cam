@@ -24,6 +24,10 @@ export class LocationsService {
     return this.locationsRepository.findOne({ where: { id } });
   }
 
+  async bulkUpsert(createLocationDtos: CreateLocationDto[]) {
+    return this.locationsRepository.upsert(createLocationDtos, ['id']);
+  }
+
   async update(id: number, updateLocationDto: UpdateLocationDto) {
     return this.locationsRepository.update({ id }, updateLocationDto);
   }

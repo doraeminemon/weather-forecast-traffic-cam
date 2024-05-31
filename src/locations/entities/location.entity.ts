@@ -8,9 +8,9 @@ export class Location {
   @Column()
   name: string;
 
-  @Column()
+  @Column('numeric')
   lat: number;
 
-  @Column()
+  @Column('numeric')
   lng: number;
 }

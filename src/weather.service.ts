@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
+import { LocationsService } from './locations/locations.service';
 
 type AreaMetadata = {
   name: string;
@@ -35,7 +36,10 @@ type WeatherResponse = {
 
 @Injectable()
 export class WeatherService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly locationService: LocationsService,
+  ) {}
 
   async getWeather(dateTime: string, date: string): Promise<WeatherResponse> {
     const { data } = await firstValueFrom(
@@ -53,6 +57,12 @@ export class WeatherService {
           }),
         ),
     );
+    const areas = data.area_metadata.map((area) => ({
+      name: area.name,
+      lat: area.label_location.latitude,
+      lng: area.label_location.longitude,
+    }));
+    await this.locationService.bulkUpsert(areas);
     return data;
   }
 }
