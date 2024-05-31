@@ -25,7 +25,7 @@ export class LocationsService {
   }
 
   async bulkUpsert(createLocationDtos: CreateLocationDto[]) {
-    return this.locationsRepository.upsert(createLocationDtos, ['id']);
+    return this.locationsRepository.upsert(createLocationDtos, ['name']);
   }
 
   async update(id: number, updateLocationDto: UpdateLocationDto) {
