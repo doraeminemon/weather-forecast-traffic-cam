@@ -59,8 +59,8 @@ export class WeatherService {
     );
     const areas = data.area_metadata.map((area) => ({
       name: area.name,
-      lat: area.label_location.latitude,
-      lng: area.label_location.longitude,
+      lat: area.label_location.latitude.toFixed(6),
+      lng: area.label_location.longitude.toFixed(6),
     }));
     await this.locationService.bulkUpsert(areas);
     return data;

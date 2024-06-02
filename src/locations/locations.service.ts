@@ -20,6 +20,10 @@ export class LocationsService {
     return this.locationsRepository.find();
   }
 
+  findBy(name: string) {
+    return this.locationsRepository.findBy({ name });
+  }
+
   findOne(id: number) {
     return this.locationsRepository.findOne({ where: { id } });
   }
