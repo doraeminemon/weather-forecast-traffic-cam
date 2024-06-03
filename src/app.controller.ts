@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { TrafficService } from './traffic.service';
 import { WeatherService } from './weather.service';
 import { LocationsService } from './locations/locations.service';
+import HaversineDistance from './utils/haversineDistance';
 
 @Controller()
 export class AppController {
@@ -25,20 +26,26 @@ export class AppController {
   ) {
     let result = await this.trafficService.getTraffic(dateTime);
     if (name) {
-      const location = await this.locationService.findBy(name);
-      console.log({
-        location,
-        items: result.items[0].cameras.map((c) => c.location),
-      });
+      const [location] = await this.locationService.findBy(name);
+      if (!location) {
+        return result;
+      }
       result = {
         ...result,
         items: result.items.map((item) => ({
           ...item,
-          cameras: item.cameras.filter(
-            (item) =>
-              item.location.latitude.toFixed(3) === location[0].lat &&
-              item.location.longitude.toFixed(3) === location[0].lng,
-          ),
+          cameras: item.cameras
+            .map((item) => ({
+              ...item,
+              distance: HaversineDistance(
+                { lat: item.location.latitude, lng: item.location.longitude },
+                {
+                  lat: parseFloat(location.lat),
+                  lng: parseFloat(location.lng),
+                },
+              ),
+            }))
+            .filter((i) => i.distance <= 5.0),
         })),
       };
     }
